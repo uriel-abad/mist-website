@@ -14,6 +14,7 @@ MIST.ui = (() => {
     menuToggle: document.getElementById("menuToggle"),
     navLinks: document.querySelector(".nav-links"),
     helpMessengerLink: document.getElementById("help-messenger-link"),
+    orderNumberResult: document.getElementById("order-number-result"),
   };
 
   let toastTimer;

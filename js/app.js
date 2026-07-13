@@ -85,6 +85,7 @@ MIST.app = (() => {
 
     return `New order request — MIST
 
+Order Number: ${payload.orderNumber}
 Name: ${payload.name}
 Mobile: ${payload.mobile}
 Contact: ${payload.contact}
@@ -99,14 +100,32 @@ Notes: ${payload.notes || "—"}
 No payment yet — please confirm stock and shipping first.`;
   }
 
-  function logToSheetSilently(payload) {
-    const endpoint = MIST.config.gasEndpoint;
-    if (!endpoint || endpoint.includes("PASTE_YOUR")) return;
-    fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload),
-    }).catch(() => { /* silent — Messenger send already succeeded */ });
+  async function submitOrderAndGetNumber(payload) {
+    const endpoint = String(MIST.config.gasEndpoint || "").trim();
+    if (!endpoint || endpoint.includes("PASTE_YOUR")) {
+      throw new Error("Google Apps Script endpoint is not configured");
+    }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) throw new Error(`Order service returned ${response.status}`);
+      const result = await response.json();
+      if (!result.ok || !result.orderNumber) {
+        throw new Error(result.error || "No order number was returned");
+      }
+      return result.orderNumber;
+    } finally {
+      window.clearTimeout(timeout);
+    }
   }
 
   async function sendOrder(button) {
@@ -119,20 +138,38 @@ No payment yet — please confirm stock and shipping first.`;
       return;
     }
 
+    const payload = buildOrderPayload();
+    const originalLabel = button.textContent;
+    button.disabled = true;
+    button.textContent = "Creating order number…";
+
+    let orderNumber;
+    try {
+      orderNumber = await submitOrderAndGetNumber(payload);
+    } catch (error) {
+      console.error(error);
+      showToast("Could not create the order number. Please try again.");
+      button.textContent = originalLabel;
+      button.disabled = false;
+      return;
+    }
+
+    payload.orderNumber = orderNumber;
+    const message = buildOrderMessage(payload);
     const url = `https://m.me/${encodeURIComponent(username)}`;
     const chatWindow = window.open("about:blank", "_blank");
 
-    const payload = buildOrderPayload();
-    const message = buildOrderMessage(payload);
-    const originalLabel = button.textContent;
-    button.disabled = true;
-    button.textContent = "Opening…";
-
+    button.textContent = "Opening Messenger…";
     try {
       await navigator.clipboard.writeText(message);
-      showToast("Order copied — paste it into the Messenger chat that opens");
+      showToast(`Order ${orderNumber} copied — paste it into Messenger`);
     } catch (error) {
-      showToast("Could not auto-copy — you may need to copy the order manually");
+      showToast(`Order ${orderNumber} created. Copy the details manually if needed.`);
+    }
+
+    if (elements.orderNumberResult) {
+      elements.orderNumberResult.hidden = false;
+      elements.orderNumberResult.innerHTML = `<strong>Order Number</strong><span>${MIST.ui.escapeHtml(orderNumber)}</span><small>Use this number when following up in Messenger.</small>`;
     }
 
     if (chatWindow && !chatWindow.closed) {
@@ -141,7 +178,6 @@ No payment yet — please confirm stock and shipping first.`;
       window.location.href = url;
     }
 
-    logToSheetSilently(payload);
     MIST.cart.clear();
     elements.orderForm.reset();
     button.textContent = originalLabel;

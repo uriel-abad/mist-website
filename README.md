@@ -85,3 +85,17 @@ This version uses a black, white, and light-grey palette. The Shopping Bag secti
 ## Catalogue layout
 
 The catalogue uses a fixed four-column desktop grid. A single product stays at normal catalogue-card width rather than stretching across the page. As more entries are added to `data/products.json`, they automatically fill the remaining columns.
+
+
+## Unique order numbers
+
+This version requests a server-generated order number before opening Messenger. The number uses the format `MIST-2026-0001`, is written to the `Orders` sheet, and is included in the text copied to the customer's clipboard.
+
+1. Open the Google Sheet connected to the order form.
+2. Open **Extensions → Apps Script**.
+3. Replace the existing `Code.gs` with the included `Code.gs` file.
+4. Set the Apps Script project time zone to **Asia/Manila**.
+5. Deploy a **new version** of the web app, running as you and accessible to anyone.
+6. Keep the deployed `/exec` URL in `js/config.js`.
+
+To reset the current-year counter, run `resetCurrentYearCounter(0)` once from the Apps Script editor. This makes the next order `...-0001`. Do not reset after real orders exist unless you intentionally want duplicate order numbers. The counter automatically starts separately for each new year.
