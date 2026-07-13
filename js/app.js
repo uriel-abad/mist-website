@@ -69,7 +69,7 @@ MIST.app = (() => {
     return {
       name: document.getElementById("f-name").value.trim(),
       mobile: document.getElementById("f-mobile").value.trim(),
-      contact: document.getElementById("f-contact").value.trim(),
+      email: document.getElementById("f-email").value.trim(),
       address: document.getElementById("f-address").value.trim(),
       notes: document.getElementById("f-notes").value.trim(),
       items: MIST.cart.payloadItems(),
@@ -88,7 +88,7 @@ MIST.app = (() => {
 Order Number: ${payload.orderNumber}
 Name: ${payload.name}
 Mobile: ${payload.mobile}
-Contact: ${payload.contact}
+Email: ${payload.email}
 Address: ${payload.address}
 
 Items:
@@ -156,14 +156,13 @@ No payment yet — please confirm stock and shipping first.`;
 
     payload.orderNumber = orderNumber;
     const message = buildOrderMessage(payload);
-    const url = `https://m.me/${encodeURIComponent(username)}`;
-    const chatWindow = window.open("about:blank", "_blank");
 
     button.textContent = "Opening Messenger…";
     try {
-      await navigator.clipboard.writeText(message);
+      await copyOrderMessage(message);
       showToast(`Order ${orderNumber} copied — paste it into Messenger`);
     } catch (error) {
+      console.warn("Clipboard copy failed", error);
       showToast(`Order ${orderNumber} created. Copy the details manually if needed.`);
     }
 
@@ -172,11 +171,7 @@ No payment yet — please confirm stock and shipping first.`;
       elements.orderNumberResult.innerHTML = `<strong>Order Number</strong><span>${MIST.ui.escapeHtml(orderNumber)}</span><small>Use this number when following up in Messenger.</small>`;
     }
 
-    if (chatWindow && !chatWindow.closed) {
-      chatWindow.location.replace(url);
-    } else {
-      window.location.href = url;
-    }
+    openMessenger(username);
 
     MIST.cart.clear();
     elements.orderForm.reset();
@@ -184,13 +179,74 @@ No payment yet — please confirm stock and shipping first.`;
     button.disabled = true;
   }
 
+
+  async function copyOrderMessage(message) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(message);
+      return;
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = message;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    const copied = document.execCommand("copy");
+    textarea.remove();
+    if (!copied) throw new Error("Clipboard is unavailable");
+  }
+
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+      (navigator.maxTouchPoints > 1 && window.innerWidth < 900);
+  }
+
+  function messengerWebUrl(username) {
+    return `https://m.me/${encodeURIComponent(username)}`;
+  }
+
+  function openMessenger(username) {
+    const fallbackUrl = messengerWebUrl(username);
+    const encodedUser = encodeURIComponent(username);
+    const userAgent = navigator.userAgent || "";
+
+    // Android: open the Messenger app when installed, then fall back to m.me.
+    if (/Android/i.test(userAgent)) {
+      const fallback = encodeURIComponent(fallbackUrl);
+      window.location.href = `intent://user/${encodedUser}#Intent;scheme=fb-messenger;package=com.facebook.orca;S.browser_fallback_url=${fallback};end`;
+      return;
+    }
+
+    // iPhone/iPad: try the Messenger app, then use the browser profile if the
+    // custom scheme is unavailable. The visibility check avoids overriding the app.
+    if (/iPhone|iPad|iPod/i.test(userAgent)) {
+      let pageHidden = false;
+      const markHidden = () => { pageHidden = document.hidden; };
+      document.addEventListener("visibilitychange", markHidden, { once: true });
+      window.location.href = `fb-messenger://user-thread/${encodedUser}`;
+      window.setTimeout(() => {
+        if (!pageHidden && !document.hidden) window.location.href = fallbackUrl;
+      }, 1200);
+      return;
+    }
+
+    const opened = window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+    if (!opened) window.location.assign(fallbackUrl);
+  }
+
   function applyHelpLinks() {
     const { elements } = MIST.ui;
     const username = String(MIST.config.messengerUsername || "").trim().replace(/^@/, "");
     if (username && !username.includes("PASTE_YOUR") && elements.helpMessengerLink) {
-      elements.helpMessengerLink.href = `https://m.me/${encodeURIComponent(username)}`;
-      elements.helpMessengerLink.target = "_blank";
+      elements.helpMessengerLink.href = messengerWebUrl(username);
       elements.helpMessengerLink.rel = "noopener noreferrer";
+      if (isMobileDevice()) {
+        elements.helpMessengerLink.removeAttribute("target");
+      } else {
+        elements.helpMessengerLink.target = "_blank";
+      }
     }
   }
 

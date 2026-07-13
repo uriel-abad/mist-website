@@ -145,7 +145,7 @@
         <form id="order-form">
           <div class="field"><label for="f-name">Full name</label><input id="f-name" required></div>
           <div class="field"><label for="f-mobile">Mobile number</label><input id="f-mobile" required></div>
-          <div class="field"><label for="f-contact">Email or social username</label><input id="f-contact" required></div>
+          <div class="field"><label for="f-email">Email address</label><input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="example@email.com" required></div>
           <div class="field"><label for="f-address">Complete delivery address</label><textarea id="f-address" required></textarea></div>
           <div class="field"><label for="f-notes">Notes</label><textarea id="f-notes" placeholder="Optional"></textarea></div>
         </form>
@@ -155,7 +155,7 @@
         <div id="summary-lines"><p class="summary-empty">Add products first</p></div>
         <div id="order-number-result" class="order-number-result" hidden></div>
         <button class="btn submit-btn" id="submit-order" disabled>Send order via Messenger</button>
-        <p class="disclaimer">This opens Messenger with your order copied in — just paste and send. You will not be charged when submitting this form.</p>
+        <p class="disclaimer">Your order number and details will be copied first, then Messenger will open. Paste the message into the chat and send it. No payment is required yet.</p>
       </div>
     </div>
   </div>

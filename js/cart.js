@@ -20,6 +20,15 @@ MIST.cart = (() => {
     return String(value || "").trim().toLowerCase();
   }
 
+  function skuFor(product, color, size) {
+    const colorData = product && product.colors ? product.colors[color] : null;
+    const productCode = String(product && product.productCode || "").trim().toUpperCase();
+    const colorCode = String(colorData && colorData.code || "").trim().toUpperCase();
+    const sizeCode = String(size || "").trim().toUpperCase();
+    if (!productCode || !colorCode || !sizeCode) return "";
+    return `${productCode}-${colorCode}-${sizeCode}`;
+  }
+
   function variantKey(item) {
     return [item.productId, normalize(item.color), normalize(item.size)].join("::");
   }
@@ -161,12 +170,15 @@ MIST.cart = (() => {
   function payloadItems() {
     return items.map((item) => {
       const product = getProduct(item.productId);
+      const sku = skuFor(product, item.color, item.size);
+      if (!sku) throw new Error(`Missing SKU mapping for ${product ? product.name : item.productId}`);
       return {
-        id: product.id,
+        sku,
+        qty: item.qty,
+        // Display-only fields. The backend validates official details and price from Products.
         name: product.name,
         size: item.size,
         color: item.color,
-        qty: item.qty,
         unitPrice: product.price,
         lineTotal: product.price * item.qty,
       };
