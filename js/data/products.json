@@ -1,0 +1,24 @@
+[
+  {
+    "id": "airform-studio-set",
+    "name": "AirForm Studio Set",
+    "price": 899,
+    "badge": "NEW",
+    "sizes": ["XS", "S", "M", "L", "XL"],
+    "defaultColor": "White",
+    "colors": {
+      "White": {
+        "front": "images/products/airform-studio-set/white/front.png",
+        "back": "images/products/airform-studio-set/white/back.png"
+      },
+      "Black": {
+        "front": "images/products/airform-studio-set/black/front.png",
+        "back": "images/products/airform-studio-set/black/back.png"
+      },
+      "Light Pink": {
+        "front": "images/products/airform-studio-set/light-pink/front.png",
+        "back": "images/products/airform-studio-set/light-pink/back.png"
+      }
+    }
+  }
+]
