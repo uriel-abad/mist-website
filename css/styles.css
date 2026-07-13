@@ -1129,3 +1129,104 @@ section[id]{
   .footer-top{grid-template-columns:1fr;}
   .footer-brand{grid-column:auto;}
 }
+
+/* =========================================================
+   HERO VISIBILITY + THINNER NAV + FOUR-COLUMN ORDER STRIP
+   ========================================================= */
+@media (min-width:681px){
+  :root{--site-nav-height:66px;}
+
+  .marquee-bar{
+    padding:5px 12px;
+    font-size:9px;
+    line-height:1.25;
+  }
+
+  .nav-inner{
+    min-height:66px;
+    padding:8px 36px;
+  }
+  .logo{font-size:21px;}
+  .order-pill{
+    min-height:42px;
+    padding:11px 18px;
+  }
+
+  .hero{
+    height:calc(100svh - 91px);
+    min-height:540px;
+    max-height:820px;
+    /* Keep the model's face and upper body in frame on wide screens. */
+    background-position:center top;
+  }
+  .hero-content{padding-bottom:46px;}
+
+  .steps-strip{
+    background:#fff;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .steps-strip .wrap{
+    max-width:none;
+    width:100%;
+    padding:0;
+    gap:0;
+  }
+  .step-mini{
+    min-height:88px;
+    display:flex;
+    align-items:center;
+    padding:18px 38px;
+    border-right:1px solid var(--line);
+    color:var(--ink);
+    font-size:14px;
+    line-height:1.35;
+  }
+  .step-mini:last-child{border-right:0;}
+  .step-mini b{
+    flex:0 0 auto;
+    margin-right:20px;
+    color:#9a8c7e;
+    font-size:14px;
+  }
+}
+
+@media (max-width:680px){
+  :root{--site-nav-height:58px;}
+
+  .nav-inner{
+    min-height:52px;
+    padding-top:7px;
+    padding-bottom:7px;
+  }
+  .logo{font-size:17px;}
+  .order-pill{
+    min-height:34px;
+    padding:8px 10px;
+  }
+  .menu-toggle{width:34px;height:34px;}
+
+  .hero{
+    min-height:500px;
+    height:min(70svh,590px);
+    /* Prioritize her face and paddle instead of centering the crop. */
+    background-position:64% top;
+  }
+
+  .steps-strip{
+    background:#fff;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .steps-strip .wrap{padding:0;}
+  .step-mini{
+    min-height:72px;
+    padding:14px 14px;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    color:var(--ink);
+  }
+  .step-mini:nth-child(even){padding-left:14px;border-right:0;}
+  .step-mini:nth-child(n+3){border-bottom:0;}
+  .step-mini b{color:#9a8c7e;margin-bottom:5px;}
+}
