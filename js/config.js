@@ -6,8 +6,10 @@ MIST.config = {
   productsUrl: "data/products.json",
   // Your Facebook page username, e.g. "mist.activewear" → m.me/mist.activewear
   messengerUsername: "uriel.abad",
-  // Your Instagram username, e.g. "mist.activewear" → ig.me/m/mist.activewear
-  instagramUsername: "chrissygotosleep",
+  // Your Instagram username without @.
+  instagramUsername: "urielovesamgyup",
+  // Reliable profile URL used by the order button. Instagram no longer reliably supports username-based direct-message deep links.
+  instagramUrl: "https://www.instagram.com/urielovesamgyup/",
   // Optional — leave as-is (or blank) if you don't want a spreadsheet backup log.
   // Orders still send fine through Messenger/Instagram without it.
   gasEndpoint:

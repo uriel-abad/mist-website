@@ -113,6 +113,24 @@ No payment yet — please confirm stock and shipping first.`;
     const { elements, showToast } = MIST.ui;
     if (!elements.orderForm.reportValidity() || MIST.cart.isEmpty()) return;
 
+    const rawUsername = channel === "messenger"
+      ? MIST.config.messengerUsername
+      : MIST.config.instagramUsername;
+    const username = String(rawUsername || "").trim().replace(/^@/, "");
+
+    if (!username || username.includes("PASTE_YOUR")) {
+      showToast(`Add your ${channel === "messenger" ? "Messenger" : "Instagram"} username in js/config.js first`);
+      return;
+    }
+
+    const url = channel === "messenger"
+      ? `https://m.me/${encodeURIComponent(username)}`
+      : (MIST.config.instagramUrl || `https://www.instagram.com/${encodeURIComponent(username)}/`);
+
+    // Open immediately during the click event so mobile browsers do not block it
+    // after the asynchronous clipboard operation.
+    const chatWindow = window.open("about:blank", "_blank");
+
     const payload = buildOrderPayload();
     const message = buildOrderMessage(payload);
     const originalLabel = button.textContent;
@@ -123,24 +141,17 @@ No payment yet — please confirm stock and shipping first.`;
       await navigator.clipboard.writeText(message);
       showToast("Order copied — paste it into the chat that opens");
     } catch (error) {
-      showToast("Could not auto-copy — you may need to type the order manually");
+      showToast("Could not auto-copy — you may need to copy the order manually");
     }
 
-    const username = channel === "messenger"
-      ? MIST.config.messengerUsername
-      : MIST.config.instagramUsername;
-
-    if (!username || username.includes("PASTE_YOUR")) {
-      showToast(`Add your ${channel === "messenger" ? "Messenger" : "Instagram"} username in js/config.js first`);
-      button.disabled = false;
-      button.textContent = originalLabel;
-      return;
+    if (chatWindow && !chatWindow.closed) {
+      chatWindow.location.replace(url);
+    } else {
+      // Fallback for strict popup blockers.
+      window.location.href = url;
     }
 
-    const url = channel === "messenger" ? `https://m.me/${username}` : `https://ig.me/m/${username}`;
-    window.open(url, "_blank");
     logToSheetSilently(payload);
-
     MIST.cart.clear();
     elements.orderForm.reset();
     button.textContent = originalLabel;
@@ -153,10 +164,12 @@ No payment yet — please confirm stock and shipping first.`;
     if (messengerUsername && !messengerUsername.includes("PASTE_YOUR") && elements.helpMessengerLink) {
       elements.helpMessengerLink.href = `https://m.me/${messengerUsername}`;
       elements.helpMessengerLink.target = "_blank";
+      elements.helpMessengerLink.rel = "noopener noreferrer";
     }
     if (instagramUsername && !instagramUsername.includes("PASTE_YOUR") && elements.helpInstagramLink) {
-      elements.helpInstagramLink.href = `https://ig.me/m/${instagramUsername}`;
+      elements.helpInstagramLink.href = `https://www.instagram.com/${instagramUsername}/`;
       elements.helpInstagramLink.target = "_blank";
+      elements.helpInstagramLink.rel = "noopener noreferrer";
     }
   }
 
