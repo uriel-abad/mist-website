@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIST — Move Light. Move Free.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="marquee-bar">MIST CATALOGUE · ORDERS ARE CONFIRMED MANUALLY BEFORE PAYMENT</div>
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo">MIST</a>
+    <nav class="nav-links">
+      <a href="#catalogue">Shop</a>
+      <a href="#collections">Collections</a>
+      <a href="#sizing">Size Guide</a>
+      <a href="#how">How to Order</a>
+    </nav>
+    <a href="#order-list" class="order-pill">Shopping Bag (<span id="nav-count">0</span>)</a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-content">
+    <div class="hero-inner">
+      <span class="eyebrow">The Airform Collection</span>
+      <h1>Move Light.<br>Move Free.</h1>
+      <p>Versatile activewear for studio sessions, city walks, and everything between.</p>
+      <a href="#catalogue" class="btn light">Browse the collection</a>
+    </div>
+  </div>
+</section>
+
+<div class="steps-strip">
+  <div class="wrap">
+    <div class="step-mini"><b>01</b>Browse products</div>
+    <div class="step-mini"><b>02</b>Send an order request</div>
+    <div class="step-mini"><b>03</b>We confirm stock &amp; shipping</div>
+    <div class="step-mini"><b>04</b>Pay securely via GCash</div>
+  </div>
+</div>
+
+<section id="catalogue" class="catalogue-section">
+  <div class="wrap">
+    <div class="compact-head">
+      <h2><span class="eyebrow-lead">Available Now:</span>The MIST Edit</h2>
+      <p>No payment required until we confirm availability</p>
+    </div>
+    <div class="grid" id="product-grid"></div>
+  </div>
+</section>
+
+<section id="collections">
+  <div class="wrap">
+    <div class="collections">
+      <a href="#catalogue" class="collection-tile">
+        <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=1200&q=85" alt="Studio collection">
+        <div class="tile-copy">
+          <span class="eyebrow">Studio collection</span>
+          <h3>Quiet support. Total focus.</h3>
+          <span class="cta">Shop studio →</span>
+        </div>
+      </a>
+      <a href="#catalogue" class="collection-tile">
+        <img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=1200&q=85" alt="Movement collection">
+        <div class="tile-copy">
+          <span class="eyebrow">Movement collection</span>
+          <h3>Made for every pace.</h3>
+          <span class="cta">Shop movement →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="sizing">
+  <div class="wrap">
+    <div class="section-split">
+      <div class="section-head">
+        <span class="eyebrow">Find Your Fit</span>
+        <h2>Size guide.</h2>
+        <p>Between sizes? Choose the larger size for everyday comfort or message us for help.</p>
+      </div>
+      <table>
+        <thead><tr><th>Size</th><th>Bust</th><th>Waist</th><th>Hips</th></tr></thead>
+        <tbody>
+          <tr><td>XS</td><td>30–32</td><td>24–26</td><td>33–35</td></tr>
+          <tr><td>S</td><td>32–34</td><td>26–28</td><td>35–37</td></tr>
+          <tr><td>M</td><td>34–36</td><td>28–30</td><td>37–39</td></tr>
+          <tr><td>L</td><td>36–38</td><td>30–32</td><td>39–41</td></tr>
+          <tr><td>XL</td><td>38–40</td><td>32–34</td><td>41–43</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-split">
+      <div class="section-head">
+        <span class="eyebrow">Simple &amp; Personal</span>
+        <h2>How to order.</h2>
+        <p>We review every request before payment so you never pay for an unavailable size or incorrect delivery charge.</p>
+      </div>
+      <div class="how-grid">
+        <div class="how-cell"><h3>Choose your pieces</h3><p>Browse the catalogue and note your preferred size and colour.</p></div>
+        <div class="how-cell"><h3>Send your request</h3><p>Complete the short form below. This does not require payment.</p></div>
+        <div class="how-cell"><h3>Wait for confirmation</h3><p>We will confirm stock, shipping fee, total, and reservation period.</p></div>
+        <div class="how-cell"><h3>Pay through GCash</h3><p>We send our official payment QR only after your order is confirmed.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="order-list">
+  <div class="wrap">
+    <div class="section-head-row">
+      <div class="section-head">
+        <span class="eyebrow">Your Selection</span>
+        <h2>Shopping Bag.</h2>
+      </div>
+      <span class="section-head-note">Estimated subtotal only</span>
+    </div>
+    <div class="order-panel" id="order-panel"></div>
+  </div>
+</section>
+
+<section id="order">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">No Payment Required</span>
+      <h2>Submit your request.</h2>
+      <p>We will contact you to confirm every item, shipping, and the final total before sending our official GCash QR.</p>
+    </div>
+    <div class="order-form-grid">
+      <div>
+        <div class="notice"><b>Important</b>Do not send payment until you receive an order number and confirmation directly from MIST.</div>
+        <form id="order-form">
+          <div class="field"><label for="f-name">Full name</label><input id="f-name" required></div>
+          <div class="field"><label for="f-mobile">Mobile number</label><input id="f-mobile" required></div>
+          <div class="field"><label for="f-contact">Email or social username</label><input id="f-contact" required></div>
+          <div class="field"><label for="f-address">Complete delivery address</label><textarea id="f-address" required></textarea></div>
+          <div class="field"><label for="f-notes">Notes</label><textarea id="f-notes" placeholder="Optional"></textarea></div>
+        </form>
+      </div>
+      <div class="form-summary">
+        <h4>Order summary</h4>
+        <div id="summary-lines"><p class="summary-empty">Add products first</p></div>
+        <button class="btn submit-btn" id="submit-order" disabled>Send order via Messenger</button>
+        <button class="btn outline submit-btn-secondary" id="submit-order-ig" disabled>Send via Instagram instead</button>
+        <p class="disclaimer">This opens Messenger or Instagram with your order copied in — just paste and send. You will not be charged when submitting this form.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="help">
+  <div class="wrap">
+    <h2>Need help choosing?</h2>
+    <p>Message MIST for sizing, availability, and product recommendations.</p>
+    <div class="help-links">
+      <a href="#" id="help-instagram-link" class="btn light social-btn" aria-label="Message MIST on Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg>
+        <span>Instagram</span>
+      </a>
+      <a href="#" id="help-messenger-link" class="btn outline help-outline social-btn" aria-label="Message MIST on Messenger">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.9 3 3 6.7 3 11.4c0 2.7 1.3 5 3.4 6.5V21l3.1-1.7c.8.2 1.6.3 2.5.3 5.1 0 9-3.7 9-8.3S17.1 3 12 3Z"></path><path d="m7.7 13.8 3.1-3.3 2.4 1.8 3.1-3.3-3.4 4-2.4-1.8-2.8 2.6Z"></path></svg>
+        <span>Messenger</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">MIST</div>
+        <p>Move Light. Move Free.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Shop</h5>
+        <a href="#catalogue">All Products</a>
+        <a href="#collections">Collections</a>
+        <a href="#sizing">Size Guide</a>
+      </div>
+      <div class="footer-col">
+        <h5>Customer Care</h5>
+        <a href="#how">How to Order</a>
+        <a href="#order">Order Request</a>
+        <a href="#">Shipping &amp; Returns</a>
+      </div>
+      <div class="footer-col">
+        <h5>Follow</h5>
+        <a href="#">Instagram</a>
+        <a href="#">TikTok</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 MIST · Philippines</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/config.js" defer></script>
+<script src="js/ui.js" defer></script>
+<script src="js/cart.js" defer></script>
+<script src="js/app.js" defer></script>
+</body>
+</html>
