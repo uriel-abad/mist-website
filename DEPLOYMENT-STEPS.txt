@@ -1,0 +1,19 @@
+MIST WORKING REDEPLOYMENT STEPS
+
+1. Open the NEW Google Sheet.
+2. Go to Extensions > Apps Script.
+3. Replace everything in Code.gs with the included Code.gs.
+4. Save and run setupMistBackend once. Approve access.
+5. Confirm Products, Orders, Order Items, and Inventory tabs exist.
+6. Optional: run testBackendOrder. A test order should appear in Orders and Order Items.
+7. Deploy > New deployment > Web app.
+   Execute as: Me
+   Who has access: Anyone
+8. Copy the /exec URL.
+9. The included website currently uses:
+   https://script.google.com/macros/s/AKfycbwksqVszNRbYfun2CT_P48mmgkPyIgkr7XeNLxeifPcB8H9BkSviVL5j2POIiXUzW8/exec
+   If the new deployment URL differs, replace gasEndpoint in js/config.js.
+10. Upload the MIST folder contents to GitHub and hard-refresh the live site.
+
+Important: Editing Code.gs does not update an existing deployment automatically.
+Choose New deployment, or Manage deployments > Edit > New version.

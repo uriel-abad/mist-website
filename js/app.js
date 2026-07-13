@@ -114,11 +114,23 @@ No payment yet — please confirm stock and shipping first.`;
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
+        redirect: "follow",
+        cache: "no-store",
         signal: controller.signal,
       });
 
-      if (!response.ok) throw new Error(`Order service returned ${response.status}`);
-      const result = await response.json();
+      const responseText = await response.text();
+      if (!response.ok) {
+        throw new Error(`Order service returned ${response.status}: ${responseText.slice(0, 180)}`);
+      }
+
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (_) {
+        throw new Error(`Order service returned an invalid response: ${responseText.slice(0, 180)}`);
+      }
+
       if (!result.ok || !result.orderNumber) {
         throw new Error(result.error || "No order number was returned");
       }
@@ -148,7 +160,7 @@ No payment yet — please confirm stock and shipping first.`;
       orderNumber = await submitOrderAndGetNumber(payload);
     } catch (error) {
       console.error(error);
-      showToast("Could not create the order number. Please try again.");
+      showToast(error && error.message ? error.message : "Could not create the order number. Please try again.");
       button.textContent = originalLabel;
       button.disabled = false;
       return;

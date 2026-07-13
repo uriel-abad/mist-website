@@ -81,6 +81,12 @@ function doPost(e) {
 
     const spreadsheet = getSpreadsheet_();
     const sheets = prepareSheets_(spreadsheet);
+
+    // Defensive initialization: the live endpoint can recover even if setup was
+    // not run after a fresh deployment. Existing rows and stock are preserved.
+    seedDefaultCatalog_(sheets.products);
+    syncInventoryFromProducts_(sheets.products, sheets.inventory);
+
     const catalog = productCatalogMap_(sheets.products);
     const items = validateAndPriceItems_(payload.items, catalog);
 
@@ -474,4 +480,26 @@ function jsonResponse_(value) { return ContentService.createTextOutput(JSON.stri
 function checkSpreadsheetConnection() {
   const ss = getSpreadsheet_();
   return { name: ss.getName(), id: ss.getId(), url: ss.getUrl(), sheets: ss.getSheets().map(s => s.getName()) };
+}
+
+
+/** Run from Apps Script to verify the backend without using the website. */
+function testBackendOrder() {
+  const event = {
+    postData: {
+      contents: JSON.stringify({
+        name: "MIST Test Customer",
+        email: "test@example.com",
+        mobile: "09171234567",
+        address: "Test address",
+        notes: "Backend connection test",
+        items: [{ sku: "AFS-WHT-XS", qty: 1 }]
+      })
+    }
+  };
+
+  const response = doPost(event);
+  const text = response.getContent();
+  console.log(text);
+  return text;
 }
