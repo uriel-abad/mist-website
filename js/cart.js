@@ -108,7 +108,6 @@ MIST.cart = (() => {
         <a href="#catalogue" class="btn outline">Browse products</a></div>`;
       elements.summaryLines.innerHTML = '<p class="summary-empty">Add products first</p>';
       elements.submitButton.disabled = true;
-      elements.submitButtonIg.disabled = true;
       return;
     }
 
@@ -157,7 +156,6 @@ MIST.cart = (() => {
     }).join("") + `<div class="summary-line summary-total"><span>Estimated subtotal</span><span>${formatMoney(subtotal())}</span></div>`;
 
     elements.submitButton.disabled = false;
-    elements.submitButtonIg.disabled = false;
   }
 
   function payloadItems() {

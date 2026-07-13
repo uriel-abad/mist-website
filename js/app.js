@@ -106,29 +106,20 @@ No payment yet — please confirm stock and shipping first.`;
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
-    }).catch(() => { /* silent — Messenger/Instagram send already succeeded */ });
+    }).catch(() => { /* silent — Messenger send already succeeded */ });
   }
 
-  async function sendOrder(channel, button) {
+  async function sendOrder(button) {
     const { elements, showToast } = MIST.ui;
     if (!elements.orderForm.reportValidity() || MIST.cart.isEmpty()) return;
 
-    const rawUsername = channel === "messenger"
-      ? MIST.config.messengerUsername
-      : MIST.config.instagramUsername;
-    const username = String(rawUsername || "").trim().replace(/^@/, "");
-
+    const username = String(MIST.config.messengerUsername || "").trim().replace(/^@/, "");
     if (!username || username.includes("PASTE_YOUR")) {
-      showToast(`Add your ${channel === "messenger" ? "Messenger" : "Instagram"} username in js/config.js first`);
+      showToast("Add your Messenger username in js/config.js first");
       return;
     }
 
-    const url = channel === "messenger"
-      ? `https://m.me/${encodeURIComponent(username)}`
-      : (MIST.config.instagramUrl || `https://www.instagram.com/${encodeURIComponent(username)}/`);
-
-    // Open immediately during the click event so mobile browsers do not block it
-    // after the asynchronous clipboard operation.
+    const url = `https://m.me/${encodeURIComponent(username)}`;
     const chatWindow = window.open("about:blank", "_blank");
 
     const payload = buildOrderPayload();
@@ -139,7 +130,7 @@ No payment yet — please confirm stock and shipping first.`;
 
     try {
       await navigator.clipboard.writeText(message);
-      showToast("Order copied — paste it into the chat that opens");
+      showToast("Order copied — paste it into the Messenger chat that opens");
     } catch (error) {
       showToast("Could not auto-copy — you may need to copy the order manually");
     }
@@ -147,7 +138,6 @@ No payment yet — please confirm stock and shipping first.`;
     if (chatWindow && !chatWindow.closed) {
       chatWindow.location.replace(url);
     } else {
-      // Fallback for strict popup blockers.
       window.location.href = url;
     }
 
@@ -160,16 +150,11 @@ No payment yet — please confirm stock and shipping first.`;
 
   function applyHelpLinks() {
     const { elements } = MIST.ui;
-    const { messengerUsername, instagramUsername } = MIST.config;
-    if (messengerUsername && !messengerUsername.includes("PASTE_YOUR") && elements.helpMessengerLink) {
-      elements.helpMessengerLink.href = `https://m.me/${messengerUsername}`;
+    const username = String(MIST.config.messengerUsername || "").trim().replace(/^@/, "");
+    if (username && !username.includes("PASTE_YOUR") && elements.helpMessengerLink) {
+      elements.helpMessengerLink.href = `https://m.me/${encodeURIComponent(username)}`;
       elements.helpMessengerLink.target = "_blank";
       elements.helpMessengerLink.rel = "noopener noreferrer";
-    }
-    if (instagramUsername && !instagramUsername.includes("PASTE_YOUR") && elements.helpInstagramLink) {
-      elements.helpInstagramLink.href = `https://www.instagram.com/${instagramUsername}/`;
-      elements.helpInstagramLink.target = "_blank";
-      elements.helpInstagramLink.rel = "noopener noreferrer";
     }
   }
 
@@ -247,8 +232,7 @@ No payment yet — please confirm stock and shipping first.`;
       const button = event.target.closest('[data-action="cart-remove"]');
       if (button) MIST.cart.remove(Number(button.dataset.row));
     });
-    elements.submitButton.addEventListener("click", () => sendOrder("messenger", elements.submitButton));
-    elements.submitButtonIg.addEventListener("click", () => sendOrder("instagram", elements.submitButtonIg));
+    elements.submitButton.addEventListener("click", () => sendOrder(elements.submitButton));
     elements.menuToggle.addEventListener("click", () => elements.navLinks.classList.toggle("mobile-open"));
   }
 

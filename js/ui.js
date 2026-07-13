@@ -8,13 +8,11 @@ MIST.ui = (() => {
     orderPanel: document.getElementById("order-panel"),
     navCount: document.getElementById("nav-count"),
     submitButton: document.getElementById("submit-order"),
-    submitButtonIg: document.getElementById("submit-order-ig"),
     summaryLines: document.getElementById("summary-lines"),
     orderForm: document.getElementById("order-form"),
     toast: document.getElementById("toast"),
     menuToggle: document.getElementById("menuToggle"),
     navLinks: document.querySelector(".nav-links"),
-    helpInstagramLink: document.getElementById("help-instagram-link"),
     helpMessengerLink: document.getElementById("help-messenger-link"),
   };
 
